@@ -1,50 +1,61 @@
-# React + TypeScript + Vite
+# Image Component
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The `Image` component utilizes the Intersection Observer API to load images only when they are in the viewport.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Lazy Loading**: The component loads images lazily, ensuring images are only loaded when they enter the viewport.
+- **Custom Effects**: Supports `blur` and `opacity` effects during the image loading process.
+- **Placeholder Image**: Option to display a placeholder image until the main image is loaded.
+- **Customizable**: Accepts various props to customize the image attributes and loading behavior.
 
-## Expanding the ESLint configuration
+## Props
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+| Prop            | Type                     | Default | Description                                                                                 |
+|-----------------|--------------------------|---------|---------------------------------------------------------------------------------------------|
+| `src`           | `string`                 | `-`     | The source URL of the main image to be loaded.                                              |
+| `placeholderSrc`| `string`                 | `-`     | The source URL of the placeholder image to be shown until the main image is loaded.         |
+| `className`     | `string`                 | `-`     | CSS class names to apply to the image.                                                      |
+| `id`            | `string`                 | `-`     | The ID of the image element.                                                                |
+| `alt`           | `string`                 | `-`     | Alternate text for the image.                                                               |
+| `width`         | `string` or `number`     | `-`     | The width of the image.                                                                     |
+| `height`        | `string` or `number`     | `-`     | The height of the image.                                                                    |
+| `threshold`     | `number`                 | `0.1`   | Specifies the percentage of the image that must be visible in the viewport before it loads. |
+| `loading`       | `'eager'` or `'lazy'`    | `-`     | Specifies the loading behavior of the image.                                                |
+| `effect`        | `'blur'` or `'opacity'`  | `-`     | The effect applied to the image during the loading process.                                 |
 
-- Configure the top-level `parserOptions` property like this:
+## Usage
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+To use the `Image` component, import it into React project and provide the necessary props.
+
+### Example
+
+```jsx
+import Image from './Image';
+
+function App() {
+  return (
+    <div>
+      <Image 
+        src="https://example.com/image.jpg"
+        placeholderSrc="https://example.com/placeholder.jpg"
+        alt="Sample Image"
+        width={600}
+        height={400}
+        threshold={0.5}
+        effect="blur"
+      />
+    </div>
+  );
+}
+
+export default App;
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+In the example above, the `Image` component will display a placeholder image first and apply a blur effect as the main image loads. The image will start loading when 50% of it is visible in the viewport due to the `threshold` prop set to `0.5`.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## Notes
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+- The `threshold` prop defines how much of the image should be visible before it starts loading. The value ranges from `0` (0%) to `1` (100%).
+- The `effect` prop determines the visual effect during the image loading process. It can be set to `'blur'` for a blur effect or `'opacity'` for a fade-in effect.
+- The component uses the `IntersectionObserver` API, which may require a polyfill for support in older browsers.
